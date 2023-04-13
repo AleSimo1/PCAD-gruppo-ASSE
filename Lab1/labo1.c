@@ -3,7 +3,6 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <labo1.h>
 
 const int M = 17;
 const int N = 10;
@@ -99,7 +98,27 @@ void print_matrix(struct matrix *m){
 	printf("\n");
 }
 
-void* prod_matrix();
+void* prod_matrix(void *arg){
+	struct parameters *p = (struct parameters*)arg;
+	
+	for(int i = 0; i < p->A.rig; i++){
+		for(int j = 0; j < p->B.col; j++){
+			for(int k = 0; k < p->A.col; k++){
+				p->R.next[i*p->R.col+j] += p->A.next[i*p->A.col+k] * p->B.next[k*p->B.col+j];
+			}
+		}
+	}
+	
+	for(int i = 0; i < p->R.rig; i++){
+		for(int j = 0; j < p->C.col; j++){
+			for(int k = 0; k < p->R.col; k++){
+				p->result.next[i*p->result.col+j] += p->R.next[i*p->R.col+k] * p->C.next[k*p->C.col+j];
+			}
+		}
+	}
+	
+	pthread_exit(NULL);
+}
 
 int main(){
 	struct parameters *p = (struct parameters*)malloc(sizeof(struct parameters));
