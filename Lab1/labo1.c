@@ -3,6 +3,11 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <labo1.h>
+
+const int M = 17;
+const int N = 10;
+const int P = 15;
 
 int main(){
     int N,M = 10;
