@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+pthread_barrier_t barrier;
+
 const int M = 17;
 const int N = 10;
 const int P = 15;
@@ -23,50 +25,6 @@ struct parameters {
 	int n_thread;	
 	int n_block;
 };
-
-/*int main(){
-	
-	// Allocate memory for the matrices
-	float **A = (float **)malloc(M*N*sizeof(float *));
-	float **B = (float **)malloc(N*P*sizeof(float *));
-	float **C = (float **)malloc(P*M*sizeof(float *));
-	
-	// Initialize the matrices
-	for(int i = 0; i < M; i++){
-		for(int j = 0; j < N; j++){
-			A[i][j] = i+j;
-		}
-	}
-	
-	for(int i = 0; i < N; i++){
-		for(int j = 0; j < P; j++){
-			B[i][j] = i+j;
-		}
-	}
-	
-	for(int i = 0; i < P; i++){
-		for(int j = 0; j < M; j++){
-			C[i][j] = i+j;
-		}
-	}
-	
-	// Create the threads
-	pthread_t threads[M];
-	for(int i = 0; i < M; i++){
-		pthread_create(&threads[i], NULL, matrixMultiplication, (void *)i);
-	}
-	
-	// Wait for the threads to finish
-	for(int i = 0; i < M; i++){
-		pthread_join(threads[i], NULL);
-	}
-	
-	// Print the result
-	for(int i = 0; i < M; i++){
-		for(int j = 0; j < P; j++){
-			printf("%f ", C[i][j]);
-		}
-		printf("*/
 
 void init_matrix(struct matrix *m, int rig, int col){
 	m->next = (double*)malloc(rig*col*sizeof(double));
@@ -98,26 +56,61 @@ void print_matrix(struct matrix *m){
 	printf("\n");
 }
 
-void* prod_matrix(void *arg){
+void* prod_matrix_thread(void *arg){
 	struct parameters *p = (struct parameters*)arg;
-	
-	for(int i = 0; i < p->A.rig; i++){
-		for(int j = 0; j < p->B.col; j++){
-			for(int k = 0; k < p->A.col; k++){
-				p->R.next[i*p->R.col+j] += p->A.next[i*p->A.col+k] * p->B.next[k*p->B.col+j];
+	double value;
+	int i,j,k;
+
+	for(i = p->n_thread * p->n_block; i < p->n_thread * p->n_block + p->n_block; i++){
+		for(j = 0; j < p->B.col; j++){
+			value = 0;
+			for(k = 0; k < p->A.col; k++){
+				value += p->A.next[i*p->A.col+k] * p->B.next[k*p->B.col+j];
 			}
+			p->R.next[i*p->R.col+j] = value;
 		}
 	}
 	
-	for(int i = 0; i < p->R.rig; i++){
-		for(int j = 0; j < p->C.col; j++){
-			for(int k = 0; k < p->R.col; k++){
-				p->result.next[i*p->result.col+j] += p->R.next[i*p->R.col+k] * p->C.next[k*p->C.col+j];
+	pthread_barrier_wait(&barrier);
+
+	for(i=p->n_thread * p->n_block; i < p->n_thread * p->n_block + p->n_block; i++){
+		for(j = 0; j < p->C.col; j++){
+			value = 0;
+			for(k = 0; k < p->R.col; k++){
+				value += p->R.next[i*p->R.col+k] * p->C.next[k*p->C.col+j];
 			}
+			p->result.next[i*p->result.col+j] = value;
+		}
+	}
+
+	pthread_barrier_wait(&barrier);
+
+}
+
+void* prod_matrix_no_thread(void *arg){
+	struct parameters *p = (struct parameters*)arg;
+	double value;
+	int i,j,k;
+
+	for(i = 0; i < p->A.rig; i++){
+		for(j = 0; j < p->B.col; j++){
+			value = 0;
+			for(k = 0; k < p->A.col; k++){
+				value += p->A.next[i*p->A.col+k] * p->B.next[k*p->B.col+j];
+			}
+			p->R.next[i*p->R.col+j] = value;
 		}
 	}
 	
-	pthread_exit(NULL);
+	for(i = 0; i < p->R.rig; i++){
+		for(j = 0; j < p->C.col; j++){
+			value = 0;
+			for(k = 0; k < p->R.col; k++){
+				value += p->R.next[i*p->R.col+k] * p->C.next[k*p->C.col+j];
+			}
+			p->result.next[i*p->result.col+j] = value;
+		}
+	}
 }
 
 int main(){
@@ -138,7 +131,7 @@ int main(){
 	
 	pthread_t threads[p->n_thread];
 	for(int i = 0; i < p->n_thread; i++){
-		pthread_create(&threads[i], NULL, prod_matrix, (void *)p);
+		pthread_create(&threads[i], NULL, &prod_matrix_no_thread, (void *)p);
 	}
 	
 	for(int i = 0; i < p->n_thread; i++){
@@ -150,6 +143,21 @@ int main(){
 	print_matrix(&p->C);
 	print_matrix(&p->R);
 	print_matrix(&p->result);
-	
-	return 0;
 }
+
+
+/*	for(int i = 0; i < p->A.rig; i++){
+		for(int j = 0; j < p->B.col; j++){
+			for(int k = 0; k < p->A.col; k++){
+				p->R.next[i*p->R.col+j] += p->A.next[i*p->A.col+k] * p->B.next[k*p->B.col+j];
+			}
+		}
+	}
+	
+	for(int i = 0; i < p->R.rig; i++){
+		for(int j = 0; j < p->C.col; j++){
+			for(int k = 0; k < p->R.col; k++){
+				p->result.next[i*p->result.col+j] += p->R.next[i*p->R.col+k] * p->C.next[k*p->C.col+j];
+			}
+		}
+	}*/
