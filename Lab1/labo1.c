@@ -163,7 +163,7 @@ int main(){
 	print_matrix(&p->R);
 	print_matrix(&p->result);
 
-	printf("Il numero di thread: %p->n_thread con un tempo di %f secondi", p->n_thread, (double)(clock() - start)/CLOCKS_PER_SEC);
+	printf("Il numero di thread: %d con un tempo di %f secondi", p->n_thread, (double)(clock() - start)/CLOCKS_PER_SEC);
 
 	free(p);
 }
