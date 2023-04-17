@@ -165,11 +165,6 @@ int main(){
 
 	printf("Il numero di thread: %p->n_thread con un tempo di %f secondi", p->n_thread, (double)(clock() - start)/CLOCKS_PER_SEC);
 
-	free(p->A.next);
-	free(p->B.next);
-	free(p->C.next);
-	free(p->R.next);
-	free(p->result.next);
 	free(p);
 	pthread_barrier_destroy(&barrier);
 }
