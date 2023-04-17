@@ -1,3 +1,12 @@
+/*
+	Gruppo 18: Un viaggio
+	Componenti:
+		* Alessandro Simoni S5029301
+		* Simone Lutero S4801326
+		* Eleonora Fabbri S4842235
+		* Samuele Osti S4816869
+*/
+
 #include <pthread.h>
 #include <time.h>
 #include <pthread.h>
@@ -114,25 +123,32 @@ void* prod_matrix_no_thread(void *arg){
 }
 
 int main(){
+	//Inizializzazione per calcolo tempo
 	srand(time(NULL));
 
+	//Inizializzazione struttura per calcolo matrici
 	struct parameters *p = (struct parameters*)malloc(sizeof(struct parameters));
 	
+	//Inizializzazione matrici
 	init_matrix(&p->A, M, N);
 	init_matrix(&p->B, N, P);
 	init_matrix(&p->C, P, M);
 	init_matrix(&p->R, M, P);
 	init_matrix(&p->result, M, P);
 	
+	//Inserimento di valori random nelle matrici
 	random_matrix(&p->A);
 	random_matrix(&p->B);
 	random_matrix(&p->C);
 	
+	//Inizializzazione numero thread e blocchi
 	p->n_thread = 4;
 	p->n_block = 4;
 
+	//Calcolo tempo iniziale
 	clock_t start = clock();
 	
+	//Calcolo matrici senza thread e stampa
 	pthread_barrier_init(&barrier, NULL, p->n_block);
 	pthread_t threads[p->n_thread];
 	for(int i = 0; i < p->n_thread; i++){
@@ -149,6 +165,7 @@ int main(){
 	print_matrix(&p->R);
 	print_matrix(&p->result);
 	
+	//Calcolo matrici con thread e stampa
 	for(int i = 0; i < p->n_thread; i++){
 		pthread_create(&threads[i], NULL, &prod_matrix_thread, (void *)p);
 	}
@@ -163,8 +180,10 @@ int main(){
 	print_matrix(&p->R);
 	print_matrix(&p->result);
 
+	//Stampa tempo di calcolo
 	printf("Il numero di thread: %d con un tempo di %f secondi", p->n_thread, (double)(clock() - start)/CLOCKS_PER_SEC);
 
+	//Rilascio memoria
 	free(p->A.next);
 	free(p->B.next);
 	free(p->C.next);
