@@ -11,13 +11,14 @@ public class NumeriPrimi {
         ArrayList<Integer> numberList = new ArrayList<>();
 
         for(int i=0; i<n; i++){
-            numberList.add(i);
+            numberList.add(i+2);
         }
 
         for(int i=0; i<numberList.size(); i++){
-            System.out.print(numberList.get(i));
+            System.out.print(numberList.get(i) + " ");
         }
 
-        //Thread t1 = new Thread(new Threads());
+        MyThread my_t = new MyThread(numberList, 1);
+        my_t.run();
     }
 }
