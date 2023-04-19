@@ -3,8 +3,6 @@ package Lab2;
 import java.util.*;
 
 public class MyThread extends Thread {
-    private Thread t = new Thread();
-    private int n_keep = 0;
     private int n_prime;
     private ArrayList<Integer> numberStart = new ArrayList<>();
     private ArrayList<Integer> numberNext = new ArrayList<>();
@@ -18,15 +16,18 @@ public class MyThread extends Thread {
     public void run() {
         for(int i=0; i<numberStart.size(); i++){
                 if(numberStart.get(i) % numberStart.get(n_prime) != 0 || numberStart.get(n_prime) == numberStart.get(i)){
-                    numberNext.add(i);
+                    numberNext.add(numberStart.get(i));
             }
         }
-        MyThread t_next = new MyThread(numberNext, n_prime++);
-        if(numberNext.size() != n_prime)
-            t_next.run();
-        else
-        for(int i=0; i<numberNext.size(); i++){
-            System.out.print(numberNext.get(i) + " ");
+        n_prime++;
+        t_next = new MyThread(numberNext, n_prime);
+        if(numberNext.size() != n_prime){
+            t_next.start();
+        }
+        else{
+            for(int i=0; i<numberNext.size(); i++){
+                System.out.print(numberNext.get(i) + " ");
+            }
         }
     }
 }
