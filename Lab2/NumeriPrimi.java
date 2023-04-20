@@ -9,15 +9,6 @@
 
 package Lab2;
 
-/*
-	Gruppo 18: Un viaggio
-	Componenti:
-		* Alessandro Simoni S5029301
-		* Simone Lutero S4801326
-		* Eleonora Fabbri S4842235
-		* Samuele Osti S4816869
-*/
-
 import java.util.*;
 
 public class NumeriPrimi {
@@ -44,12 +35,11 @@ public class NumeriPrimi {
                 System.out.print(numberList.get(i) + " ");
             }
             System.out.println("");
+            System.out.println("");
     
             //Creo il primo thread e lo avvio
             MyThread my_t = new MyThread(numberList, 1);
             my_t.start();
         }
-
-
     }
 }
