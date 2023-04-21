@@ -38,7 +38,7 @@ public class NumeriPrimi {
             System.out.println("");
     
             //Creo il primo thread e lo avvio
-            MyThread my_t = new MyThread(numberList, 1);
+            MyThread my_t = new MyThread(numberList);
             my_t.start();
         }
     }
