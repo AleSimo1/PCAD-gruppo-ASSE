@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Lab3.Main",
+            "projectName": "PCAD-gruppo-ASSE_5d37b2b7"
+        },
+        {
+            "type": "java",
             "name": "NumeriPrimi",
             "request": "launch",
             "mainClass": "Lab2.NumeriPrimi",

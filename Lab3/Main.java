@@ -11,39 +11,6 @@ public class Main {
     public static void main(String[] args){
         //Create an ArrayList of MyEvents
         ArrayList<MyEvents> events = new ArrayList<>();
-
-        //Create events
-        CreateEvent(events, "Concert", "100");
-        CreateEvent(events, "Cinema", "50");
-        CreateEvent(events, "Theatre", "30");
-        CreateEvent(events, "Concert", "100");
-
-        //Stamp events
-        ReadEvent(events);
-
-        //Add seats to events
-        AddSeats(events, "Concert", "50");
-        AddSeats(events, "Cinema", "50");
-        AddSeats(events, "Theatre", "50");
-
-        //Stamp events
-        ReadEvent(events);
-
-        //Reserve seats to events
-        ReserveSeats(events, "Concert", "50");
-        ReserveSeats(events, "Cinema", "50");
-        ReserveSeats(events, "Theatre", "50");
-
-        //Stamp events
-        ReadEvent(events);
-
-        //Delete events
-        DeleteEvent(events, "Concert");
-        DeleteEvent(events, "Cinema");
-        DeleteEvent(events, "Concert");
-
-        //Stamp events
-        ReadEvent(events);
     }
 
     //Create event only if it doesn't exist
