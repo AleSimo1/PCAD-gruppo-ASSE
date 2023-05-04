@@ -16,7 +16,7 @@ public class ListaEventi {
             }
         }
         if(trovato) {
-            System.out.println("Evento già esistente");
+            System.out.println(nome + " già esistente");
         }else{
             Evento e = new Evento(nome, n_posti);
             eventi.add(e);
@@ -33,7 +33,7 @@ public class ListaEventi {
             }
         }
         if(!trovato) {
-            System.out.println("Evento non esistente");
+            System.out.println(nome + " non esistente");
         }
     }
 
@@ -47,7 +47,7 @@ public class ListaEventi {
             }
         }
         if(!trovato) {
-            System.out.println("Evento non esistente");
+            System.out.println(nome + " non esistente");
         }
     }
 
@@ -61,16 +61,16 @@ public class ListaEventi {
             }
         }
         if(!trovato) {
-            System.out.println("Evento non esistente");
+            System.out.println(nome + " non esistente");
         }
     }
 
     public void stampaEventi() {
         if(eventi.isEmpty()){
-            System.out.println("Nessun evento");
+            System.out.println("Nessun evento presente\n");
         }else{
             for (Evento e : eventi) {
-                System.out.println(e.getNome() + " " + e.getNPosti());
+                System.out.println("Nome Evento: " + e.getNome() + " con " + e.getNPosti() + " posti");
             }
         }
     }

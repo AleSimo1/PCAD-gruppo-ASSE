@@ -12,7 +12,7 @@ public class ThreadsUsers extends Thread{
     public void run(){
         synchronized(eventi){
             try{
-                System.out.println("User prenota");
+                System.out.println("User prenota nell'" + nomeEvento + " " + posti + " posti");
                 eventi.prenotaPosti(nomeEvento, posti);
                 eventi.stampaEventi();
             }catch(Exception e){
