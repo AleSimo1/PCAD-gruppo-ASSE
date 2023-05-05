@@ -15,11 +15,14 @@ import java.util.concurrent.TimeUnit;
 
 public class App {
     public static void main(String[] args) throws Exception {
+        //Creazione della lista di eventi, della lista thread users e di quella thread admins
         ListaEventi eventi = new ListaEventi();
         List<ThreadsUsers> users = new ArrayList<>();
         List<ThreadsAdmin> admins = new ArrayList<>();
+        //Creazione del semaforo per la sincronizzazione
         Semaphore lock = new Semaphore(1);
 
+        //Creazione dei thread users e admins e inserimento nelle rispettive liste
         admins.add(new ThreadsAdmin(eventi, "Evento1", 10, lock));
         admins.add(new ThreadsAdmin(eventi, "Evento2", 20, lock));
         admins.add(new ThreadsAdmin(eventi, "Evento3", 30, lock));
@@ -30,18 +33,22 @@ public class App {
         users.add(new ThreadsUsers(eventi, "Evento3", 15, lock));
         users.add(new ThreadsUsers(eventi, "Evento4", 20, lock));
 
+        //Creazione del thread pool e inserimento dei thread users e admins
         try {
             ThreadPoolExecutor executor = new ThreadPoolExecutor(4, 16, 30, TimeUnit.SECONDS,
                     new ArrayBlockingQueue<>(5));
             try {
                 for (int i = 0; i < 4; i++) {
+                    //Esecuzione dei thread users e admins
                     executor.execute(users.get(i));
                     executor.execute(admins.get(i));
                 }
             } catch (Exception e) {
+                //Stampa dell'eccezione e chiusura del thread pool
                 System.out.println(e.getMessage());
                 executor.close();
             } finally {
+                //Chiusura del thread pool al termine dell'esecuzione
                 executor.shutdown();
             }
         } catch (Exception e) {
