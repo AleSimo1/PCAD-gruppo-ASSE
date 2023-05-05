@@ -32,11 +32,11 @@ public class App {
             ThreadPoolExecutor executor = new ThreadPoolExecutor(7, 14, 30, TimeUnit.SECONDS,
                     new ArrayBlockingQueue<>(5));
             try {
-                for (ThreadsAdmin admin : admins) {
-                    executor.execute(admin);
-                }
                 for (ThreadsUsers user : users) {
                     executor.execute(user);
+                }
+                for (ThreadsAdmin admin : admins) {
+                    executor.execute(admin);
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());

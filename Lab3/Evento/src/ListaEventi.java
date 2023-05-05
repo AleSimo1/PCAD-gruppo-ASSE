@@ -37,11 +37,14 @@ public class ListaEventi {
         }
     }
 
-    public void prenotaPosti(String nome, Integer n) {
+    public void prenotaPosti(String nome, Integer n) throws InterruptedException {
         boolean trovato = false;
         for (Evento e : eventi) {
             if (e.getNome().equals(nome)) {
                 trovato = true;
+                if(e.getNPosti() < n){
+                    System.out.println("Posti non disponibili");
+                }
                 e.prenotaPosti(n);
                 break;
             }

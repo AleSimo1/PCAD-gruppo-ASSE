@@ -15,9 +15,11 @@ public class ThreadsAdmin extends Thread{
                 System.out.println("Admin crea " + nomeEvento + " con " + posti + " posti");
                 eventi.creaEvento(nomeEvento, posti);
                 eventi.stampaEventi();
+                sleep(5000);
                 System.out.println("Admin aggiunge " + posti + " posti");
                 eventi.aggiungiPosti(nomeEvento, posti);
                 eventi.stampaEventi();
+                sleep(1000);
                 System.out.println("Admin elimina " + nomeEvento);
                 eventi.eliminaEvento(nomeEvento);
                 eventi.stampaEventi();
