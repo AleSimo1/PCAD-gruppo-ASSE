@@ -10,23 +10,19 @@ public class ThreadsAdmin extends Thread{
     }
 
     public void run(){
-        synchronized(eventi){
             try{
                 System.out.println("Admin crea " + nomeEvento + " con " + posti + " posti");
                 eventi.creaEvento(nomeEvento, posti);
-                eventi.stampaEventi();
-                sleep(5000);
+                sleep(1000);
                 System.out.println("Admin aggiunge " + posti + " posti");
                 eventi.aggiungiPosti(nomeEvento, posti);
                 eventi.stampaEventi();
                 sleep(1000);
-                System.out.println("Admin elimina " + nomeEvento);
+                System.out.println("Admin elimina " + nomeEvento + "\n");
                 eventi.eliminaEvento(nomeEvento);
-                eventi.stampaEventi();
             }catch(Exception e){
                 System.out.println(e.getMessage());
             }
-        }
     }
 
 

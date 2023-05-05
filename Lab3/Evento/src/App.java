@@ -29,14 +29,12 @@ public class App {
         users.add(new ThreadsUsers(eventi, "Evento4", 20));
 
         try {
-            ThreadPoolExecutor executor = new ThreadPoolExecutor(7, 14, 30, TimeUnit.SECONDS,
+            ThreadPoolExecutor executor = new ThreadPoolExecutor(4, 16, 30, TimeUnit.SECONDS,
                     new ArrayBlockingQueue<>(5));
             try {
-                for (ThreadsUsers user : users) {
-                    executor.execute(user);
-                }
-                for (ThreadsAdmin admin : admins) {
-                    executor.execute(admin);
+                for (int i = 0; i < 4; i++) {
+                    executor.execute(users.get(i));
+                    executor.execute(admins.get(i));
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());

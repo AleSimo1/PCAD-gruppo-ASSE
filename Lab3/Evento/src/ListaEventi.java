@@ -46,6 +46,7 @@ public class ListaEventi {
                     System.out.println("Posti non disponibili");
                 }
                 e.prenotaPosti(n);
+                System.out.println("User ha prenotato nell'" + nome + " " + n + " posti");
                 break;
             }
         }
