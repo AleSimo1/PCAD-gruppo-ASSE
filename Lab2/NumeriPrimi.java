@@ -7,8 +7,6 @@
 		* Samuele Osti S4816869
 */
 
-package Lab2;
-
 import java.util.*;
 
 public class NumeriPrimi {
