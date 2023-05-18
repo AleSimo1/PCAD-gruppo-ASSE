@@ -1,87 +1,66 @@
-package Lab2;
-
-import java.util.*;
-
 public class MyThread extends Thread {
-    private int n_threads, pivot = 1;                                                  //Numero del thread
-    private int numPrime;                                                //Indice al numero primo
-    private boolean isPrime = true;                                             //Flag per controllare se la lista è composta da numeri primi
-    private ArrayList<Integer> arrayStart = new ArrayList<>();                  //ArrayList che il thread riceve
-    private ArrayList<Integer> arrayPrimeEnd = new ArrayList<>();               //ArrayList che il thread restituisce
-    private Thread t_next = new Thread();                                       //Thread successivo
 
-    //Costruttori
-    public MyThread(ArrayList<Integer> arrayStart) {
-        this.arrayStart = arrayStart;
+    private int analizedNumber = 0;
+    private int primeNumber = 0;
+
+    MyLinkedList<Integer> listPrec = new MyLinkedList<Integer>();
+    MyLinkedList<Integer> listSucc = new MyLinkedList<Integer>();
+    MyThread nextThread;
+
+    public MyThread(MyLinkedList<Integer> listPrec) {
+        super();
+        this.listPrec = listPrec;
     }
 
-    public MyThread(ArrayList<Integer> arrayStart, ArrayList<Integer> arrayPrimeEnd, int n_threads) {
-        this.arrayStart = arrayStart;
-        this.arrayPrimeEnd = arrayPrimeEnd;
-        this.n_threads = n_threads;
-    }
-
-    //Metodo run
+   
+    @Override
     public void run() {
-        //Salvo il numero primo del thread
-        numPrime = arrayStart.get(pivot);
+        while (true) {
+            synchronized (listPrec) {
+                if (listPrec.isEmpty()) {
+                    if (listPrec.isFinished()) {
 
-        //Aggiunto il numero
-        arrayPrimeEnd.add(numPrime);
+                        if (listSucc.isNull()) {
+                            break;
+                        }
 
-        //Elimino i multipli del numero primo
-        for(int i=0; i<arrayStart.size(); i++){
-                if(arrayStart.get(i) % numPrime == 0 || arrayStart.get(i) == numPrime){
-                    arrayStart.remove(i);
-            }
-        }
+                        if (!listSucc.isNull())
+                            listSucc.setFinished(true);
+                        break;
+                    }
+                }
+                try {
+                    analizedNumber = listPrec.take().intValue();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (primeNumber == 0) {
+                    primeNumber = analizedNumber;
+                    if (primeNumber == -1) {
+                        break;
+                    } else {
+                        System.out.println("Numero " + primeNumber + " e' primo!");
+                    }
+                }
 
-        //Stampa l'array di numeri dopo l'eliminazione dei multipli
-        System.out.println("Thread " + n_threads + " - Lista start: ");
-        for(int i=0; i<arrayStart.size(); i++){
-            System.out.print(arrayStart.get(i) + " ");
-        }
+                if (analizedNumber % primeNumber != 0) {
+                    if (listSucc.isNull())
+                        listSucc = new MyLinkedList<Integer>();
 
-        //Stampa l'array di etichette dei thread
-        System.out.println("");
-        System.out.println("Lista numeri primi: ");
-        for(int i=0; i<arrayPrimeEnd.size(); i++){
-            System.out.print(arrayPrimeEnd.get(i) + " ");
-        }
-        System.out.print("\n\n");
+                    if (nextThread == null) {
+                        nextThread = new MyThread(listSucc);
+                        nextThread.start();
+                    }
 
-
-        //Controllo se ho ancora numeri da controllare
-        for(int i=1; i<arrayStart.size(); i++){
-            for(int j = i+1; j<arrayStart.size(); j++){
-                if(arrayStart.get(j) % arrayStart.get(i) == 0 ){
-                    isPrime = false;
-                    break;
+                    synchronized (listSucc) {
+                        try {
+                            listSucc.put(analizedNumber);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
-        }
-
-        //Se non ho nulla da controllare ancora
-        if(isPrime){
-            //Inserisco gli ultimi numeri primi
-            System.out.println("...");
-            for(int i=1; i<arrayStart.size(); i++){
-                arrayPrimeEnd.add(arrayStart.get(i));
-            }
-
-            //Stampo l'array di numeri primi finale
-            System.out.println("\nNumeri primi finale: ");
-            for(int i=0; i<arrayPrimeEnd.size(); i++){
-                System.out.print(arrayPrimeEnd.get(i) + " ");
-            }
-        }
-        else{//altrimenti
-            
-            //Creo il thread successivo
-            t_next = new MyThread(arrayStart, arrayPrimeEnd, n_threads+1);
-
-            //Se ho ancora numeri da controllare, avvio il thread successivo
-            t_next.start();
         }
     }
 }

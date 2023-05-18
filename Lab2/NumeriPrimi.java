@@ -12,34 +12,28 @@ package Lab2;
 import java.util.*;
 
 public class NumeriPrimi {
+    
+    public static final int MAX = 100;
+
     public static void main(String[] args) {
-        //Genero numero random tra 1 e 100
-        Random rand = new Random();
-        int n = rand.nextInt(100)+1;
+        MyLinkedList<Integer> inputList = new MyLinkedList<Integer>();
 
-        //Controllo che il numero non sia 1
-        if(n == 1){
-            //Se lo è, stampo solo 1
-            System.out.println("1");
-        }else{
-            //Altrimenti, creo un ArrayList di numeri da 1 a n
-            ArrayList<Integer> numberList = new ArrayList<>();
-
-            for(int i=1; i<n; i++){
-                numberList.add(i);
-            }
-    
-            //Stampo l'ArrayList
-            System.out.println("Lista iniziale:");
-            for(int i=0; i<numberList.size(); i++){
-                System.out.print(numberList.get(i) + " ");
-            }
-            System.out.println("");
-            System.out.println("");
-    
-            //Creo il primo thread e lo avvio
-            MyThread my_t = new MyThread(numberList);
-            my_t.start();
+        for (int i = 0; i < MAX; i++) {
+            if (i == MAX - 1)
+                inputList.add(-1);
+            else
+                inputList.add(i + 2);
         }
+
+        Object[] arrayInput = inputList.toArray();
+        System.out.println("Input list: ");
+        for (int i = 0; i < MAX; i++)
+            System.out.print(arrayInput[i] + " ");
+
+        System.out.println();
+
+        MyThread thread = new MyThread(inputList);
+        thread.start();
+        inputList.setFinished(true);
     }
 }
