@@ -1,3 +1,5 @@
+package Lab2;
+
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class MyLinkedList<E> extends LinkedBlockingQueue<E> {

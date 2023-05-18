@@ -12,7 +12,7 @@ package Lab2;
 import java.util.*;
 
 public class NumeriPrimi {
-    
+
     public static final int MAX = 100;
 
     public static void main(String[] args) {
